@@ -1,0 +1,131 @@
+/*
+Author		: Gautam Kumar
+Date		: 24-06-2014
+Description	: C program to delete nodes in a doubly linked list
+Arguments	: ./DoublLinkList pos
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+//Global declarations
+#define dllLen 10
+
+//Prototype declaration
+void GenerateLinkedList(void);
+void DeleteNode(int delLoc);
+
+struct linkedList {
+	int item;
+	struct linkedList *next;
+	struct linkedList *prev;
+};
+
+struct linkedList *head;
+
+int main(int argc, char **argv) {
+	struct linkedList *node = NULL;
+	int insertLoc = 1;
+	int insertVal = 0;
+	
+	head = (struct linkedList *) malloc(sizeof(struct linkedList));
+	node = (struct linkedList *) malloc(sizeof(struct linkedList));
+	
+	// parsing the command line arguments
+	if (argc == 2) {
+		insertLoc = atoi(argv[1]) - 1;
+		printf("Deleting at location %d\n", insertLoc);
+	} else {
+		printf("Invalid arguments. Usage: ./DoublLinkList <pos(1-%d)> <value>\n\
+Exiting program...\n", dllLen);
+		exit(EXIT_SUCCESS);
+	}
+	
+	//calling function to generate a linked list of size llLen
+	GenerateLinkedList();
+	
+	//printing the list before insertion
+	printf("=================Before==========================\n");
+	node = head;
+	int ctr = 0;
+	for (ctr = 0; node->next != NULL; ctr++) {
+		
+		printf("%d\n", node->item);
+		
+		node = node->next;
+		//printf("testing\n");fflush(stdout);
+	}
+	printf("%d\n", node->item);
+	printf("=============================================================\n");
+	
+	//Calling function to insert new item at the desired location
+	InsertNode(insertLoc, insertVal);
+	
+	//printing the list
+	printf("=======================After========================\n");
+	node = head;
+	//int ctr = 0;
+	for (ctr = 0; node->next != NULL; ctr++) {
+		
+		printf("%d\n", node->item);
+		
+		node = node->next;
+		//printf("testing\n");fflush(stdout);
+	}
+	printf("%d\n", node->item);
+	printf("=============================================================\n");
+	return EXIT_SUCCESS;
+}
+
+
+void GenerateLinkedList() {
+	time_t t;
+	struct linkedList *tail = NULL, *node = NULL;
+   
+   	/* Intializes random number generator */
+	srand((unsigned) time(&t));
+	
+	tail = (struct linkedList *) malloc(sizeof(struct linkedList));
+	tail->next = NULL;
+	tail->prev = NULL;
+	tail->item = rand();
+	
+	int ctr = 0;
+	for (ctr = 0; ctr < dllLen; ctr++) {
+		
+		node = (struct linkedList *) malloc(sizeof(struct linkedList));
+		node->item = rand();
+		node->next = NULL;
+		node->prev = tail;
+		tail->next = node;		
+		tail = node;
+		
+		if (ctr == 0) {
+			head = node;
+		}
+	}
+	printf("Link list generated\n");
+}
+	   
+void DeleteNode(int delLoc) {
+	int ctr = 0;
+	struct linkedList *node = NULL;
+	
+	node = (struct linkedList *) malloc(sizeof(struct linkedList));	
+	if (delLoc != 0) {
+		node = head;
+		for (ctr = 0; ctr < delLoc-1; ctr++) {
+			node = node->next;
+		}		
+		node->next = node->next->next;
+		node->next->prev = node;
+	} else {
+		head = head->next;
+		head->prev = NULL;
+	}
+	printf("Node added\n");
+}
+	
+		
+
+
